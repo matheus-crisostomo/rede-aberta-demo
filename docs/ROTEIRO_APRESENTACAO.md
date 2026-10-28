@@ -114,6 +114,8 @@ Aponte a versão TLS indicada no quadro HTTPS e o campo **Recebido pelo servidor
 
 O notebook valida o certificado no próprio cliente do teste. Esse envio funciona também sem rede Wi-Fi ativa. Cada quadro mostra o envio mais recente daquele protocolo, portanto os envios do notebook substituem os resultados do celular na visualização.
 
+**Controle direto no slide:** na parte Wi-Fi aberto, use **Exibir → Mostrar HTTP × HTTPS**, ou o botão de mesmo nome no modo palestrante. A tecla **C** alterna essa comparação; **D** alterna MAC e mensagens. Com o app, confirme a projeção dos envios da sessão. O botão só fica disponível após um envio HTTP/HTTPS. Para a versão independente, os exemplos são fictícios e identificados na tela.
+
 ## 7. Feche com uma pergunta
 
 Avance para a etapa **7**, ocultando os resultados da comparação.

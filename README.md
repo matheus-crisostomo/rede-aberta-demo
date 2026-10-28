@@ -24,6 +24,14 @@ Para conduzir a fala, os cliques e a participação do público, consulte o [rot
 
 Abra `docs/apresentacao_completa.html` com duplo clique. São 37 slides para uma palestra de 45 minutos: abertura, informática básica, ferramentas digitais, internet consciente, senhas seguras, golpes virtuais (com a dinâmica “Verdadeiro ou golpe?”), dados pessoais e LGPD, a demonstração de Wi-Fi aberto e o encerramento com questionário. O tempo sugerido de cada parte está no slide de roteiro e nas notas. Setas ← → ou toque na tela mudam de slide, **P** abre o modo palestrante (uma segunda janela com o roteiro de fala, o tempo sugerido de cada slide, o relógio de 45 minutos e o próximo slide, sincronizada com a do público), **N** mostra as notas do apresentador, **R** revela as respostas da dinâmica, **F** entra em tela cheia; nas etapas da demonstração, **D** e **C** funcionam como na prévia. O arquivo é independente (estilos, textos das etapas e imagens embutidos); se mudar `interface/conteudo.js` ou `interface/telao.css`, gere-o de novo.
 
+### Mostrar HTTP × HTTPS no próprio slide
+
+Na parte **Wi-Fi aberto**, abra **Exibir** na barra da apresentação e escolha **Mostrar HTTP × HTTPS**. No modo palestrante, use o botão **Mostrar HTTP × HTTPS** abaixo do título do slide. **Mostrar MAC e mensagens** alterna para a tabela de aparelhos e registros. As teclas **C** e **D** fazem as mesmas ações, inclusive quando o foco está no painel da equipe.
+
+Com o app aberto, faça primeiro um envio em **Compare HTTP e HTTPS**. O botão do slide ficará disponível assim que houver resultados; confirme a exibição para projetar os bytes HTTP/HTTPS e as mensagens recebidas. Use o mesmo botão para ocultar. As duas visualizações são exclusivas e os detalhes ficam ocultos ao trocar a etapa da demonstração.
+
+Ao abrir `docs/apresentacao_completa.html` ou `docs/previa_telao.html` diretamente, os controles mostram exemplos identificados como fictícios. A apresentação e o painel ao vivo usam os registros da sessão, com confirmação antes de revelá-los.
+
 ## Ver só o telão (sem rodar o app)
 
 ```bash

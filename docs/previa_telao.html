@@ -1,17 +1,22 @@
 <!doctype html>
-<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Prévia do telão</title><link rel="icon" href="../interface/icone.svg" type="image/svg+xml"><link rel="stylesheet" href="../interface/estilo.css"><link rel="stylesheet" href="../interface/telao.css"><script src="../interface/conteudo.js" defer></script></head>
-<body class="telao"><div class="barra-telao"><span id="conexao-telao" role="status">Conectando…</span><button id="tela-cheia">Tela cheia</button></div><main class="viewport"><article id="palco" class="palco"><header class="slide-header"><span class="marca-telao"><i class="barra-amarela"></i>Inclusão Digital e Segurança da Informação<span>Demonstração: por que não confiar em Wi-Fi aberto</span></span><span id="modo-telao" class="selo-telao">SIMULAÇÃO</span></header><section class="slide"><div class="topo-slide"><span id="passo-telao" class="passo-telao">1 / 7</span><div id="progresso-telao" class="progresso-telao" aria-hidden="true"></div></div><h1 id="titulo-telao">Preparando a dinâmica</h1><div id="corpo-telao"></div></section><footer class="slide-footer"><span>Projeto de intervenção · Sistemas de Informação · Unit<b>EMEF Prof. Diomedes Santos Silva</b></span><span id="totais-telao">Participação voluntária</span></footer><section id="dados-telao" class="dados-telao" hidden><div class="dados-titulo"><h2>Resultados da sessão</h2><span id="dados-modo"></span></div><div class="dados-colunas"><div><h3>Vizinhos observados</h3><table><thead><tr><th>IP</th><th>MAC</th><th>Estado</th></tr></thead><tbody id="vizinhos"></tbody></table></div><div><h3>Últimos envios · UTC</h3><table><thead><tr><th>Horário</th><th>IP</th><th>Navegador</th><th>Apelido</th></tr></thead><tbody id="registros"></tbody></table></div></div><p>Mostrando até 5 linhas de cada tabela. Envios não equivalem a pessoas diferentes.</p></section><section id="comparacao-telao" class="comparacao-telao" hidden><div class="dados-titulo"><h2>O mesmo texto, duas conexões</h2><span>Fluxos TCP reais</span></div><p class="metodo-comparacao">Bytes observados antes da descriptografia no servidor de teste</p><div id="quadros-telao" class="quadros-comparacao"></div><p class="conclusao-comparacao">HTTPS protege o conteúdo no transporte. O servidor de destino recebe o texto enviado.</p></section></article></main><script>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Prévia do telão</title><link rel="icon" href="../interface/icone.svg" type="image/svg+xml"><link rel="stylesheet" href="../interface/estilo.css"><link rel="stylesheet" href="../interface/telao.css"><script src="../interface/conteudo.js" defer></script><style>.controles-previa{display:flex;gap:8px;flex:none}.barra-telao #conexao-telao{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.controles-previa button[aria-pressed=true]{background:#f2b632;color:#14254d}.controles-previa button{white-space:nowrap}</style></head>
+<body class="telao"><div class="barra-telao"><span id="conexao-telao" role="status">Conectando…</span><div class="controles-previa"><button id="mostrar-dados" aria-pressed="false">MAC e mensagens</button><button id="mostrar-comparacao" aria-pressed="false">HTTP × HTTPS</button><button id="tela-cheia">Tela cheia</button></div></div><main class="viewport"><article id="palco" class="palco"><header class="slide-header"><span class="marca-telao"><i class="barra-amarela"></i>Inclusão Digital e Segurança da Informação<span>Demonstração: por que não confiar em Wi-Fi aberto</span></span><span id="modo-telao" class="selo-telao">SIMULAÇÃO</span></header><section class="slide"><div class="topo-slide"><span id="passo-telao" class="passo-telao">1 / 7</span><div id="progresso-telao" class="progresso-telao" aria-hidden="true"></div></div><h1 id="titulo-telao">Preparando a dinâmica</h1><div id="corpo-telao"></div></section><footer class="slide-footer"><span>Projeto de intervenção · Sistemas de Informação · Unit<b>EMEF Prof. Diomedes Santos Silva</b></span><span id="totais-telao">Participação voluntária</span></footer><section id="dados-telao" class="dados-telao" hidden><div class="dados-titulo"><h2>Resultados da sessão</h2><span id="dados-modo"></span></div><div class="dados-colunas"><div><h3>Vizinhos observados</h3><table><thead><tr><th>IP</th><th>MAC</th><th>Estado</th></tr></thead><tbody id="vizinhos"></tbody></table></div><div><h3>Últimos envios · UTC</h3><table><thead><tr><th>Horário</th><th>IP</th><th>Navegador</th><th>Apelido</th></tr></thead><tbody id="registros"></tbody></table></div></div><p>Mostrando até 5 linhas de cada tabela. Envios não equivalem a pessoas diferentes.</p></section><section id="comparacao-telao" class="comparacao-telao" hidden><div class="dados-titulo"><h2>O mesmo texto, duas conexões</h2><span>Fluxos TCP reais</span></div><p class="metodo-comparacao">Bytes observados antes da descriptografia no servidor de teste</p><div id="quadros-telao" class="quadros-comparacao"></div><p class="conclusao-comparacao">HTTPS protege o conteúdo no transporte. O servidor de destino recebe o texto enviado.</p></section></article></main><script>
 /* Prévia estática do telão: abre direto no navegador, sem rodar o app.
    Setas ← → mudam de etapa; D mostra/oculta a tabela de resultados; C mostra/oculta a comparação HTTP × HTTPS (dados fictícios); F = tela cheia.
    Edite interface/telao.css e interface/conteudo.js e recarregue (F5). */
 window.addEventListener('DOMContentLoaded', () => {
   const $ = (id) => document.getElementById(id);
   let i = Math.max(0, Math.min(ETAPAS.length - 1, (parseInt(location.hash.slice(1)) || 1) - 1));
+  let ultimaEtapa = null;
   function ajustar() {
     const a = document.querySelector('.viewport');
     $('palco').style.transform = `scale(${Math.min(a.clientWidth / 1920, a.clientHeight / 1080)})`;
   }
   function mostrar() {
+    if (ultimaEtapa !== i) { $('dados-telao').hidden = true; $('comparacao-telao').hidden = true; }
+    ultimaEtapa = i;
+    $('mostrar-dados').setAttribute('aria-pressed', String(!$('dados-telao').hidden));
+    $('mostrar-comparacao').setAttribute('aria-pressed', String(!$('comparacao-telao').hidden));
     $('conexao-telao').textContent = 'Prévia · use ← → para navegar';
     $('modo-telao').textContent = 'SIMULAÇÃO · DADOS FICTÍCIOS';
     $('passo-telao').textContent = `${i + 1} / ${ETAPAS.length}`;
@@ -22,6 +27,17 @@ window.addEventListener('DOMContentLoaded', () => {
     $('totais-telao').textContent = '0 vizinhos observados · 0 envios';
     location.hash = i + 1;
   }
+  function alternarComparacao(comparacao) {
+    const alvo = $(comparacao ? 'comparacao-telao' : 'dados-telao');
+    const exibir = alvo.hidden;
+    $('dados-telao').hidden = true;
+    $('comparacao-telao').hidden = true;
+    alvo.hidden = !exibir;
+    mostrar();
+  }
+  $('mostrar-dados').onclick = () => alternarComparacao(false);
+  $('mostrar-comparacao').onclick = () => alternarComparacao(true);
+  $('comparacao-telao').querySelector('.dados-titulo span').textContent = 'EXEMPLOS FICTÍCIOS';
   const linhas = (rows) => rows.map((r) => `<tr>${r.map((c) => `<td>${c}</td>`).join('')}</tr>`).join('');
   $('vizinhos').innerHTML = linhas([['10.42.0.11', '02:00:00:00:00:01', 'SIMULADO'], ['10.42.0.23', '02:00:00:00:00:02', 'SIMULADO']]);
   $('registros').innerHTML = linhas([['18:30:12', '10.42.0.23', 'Navegador de exemplo (fictício)', 'Visitante Azul'], ['18:31:40', '10.42.0.11', 'Navegador de exemplo (fictício)', 'Visitante 1']]);
@@ -32,8 +48,8 @@ window.addEventListener('DOMContentLoaded', () => {
     if (e.key === 'ArrowRight' || e.key === ' ') i = Math.min(ETAPAS.length - 1, i + 1);
     else if (e.key === 'ArrowLeft') i = Math.max(0, i - 1);
     else if (e.key === 'f' || e.key === 'F') document.documentElement.requestFullscreen?.();
-    else if (e.key === 'd' || e.key === 'D') { $('dados-telao').hidden = !$('dados-telao').hidden; $('comparacao-telao').hidden = true; }
-    else if (e.key === 'c' || e.key === 'C') { $('comparacao-telao').hidden = !$('comparacao-telao').hidden; $('dados-telao').hidden = true; }
+    else if (e.key === 'd' || e.key === 'D') { alternarComparacao(false); return; }
+    else if (e.key === 'c' || e.key === 'C') { alternarComparacao(true); return; }
     else return;
     mostrar();
   });

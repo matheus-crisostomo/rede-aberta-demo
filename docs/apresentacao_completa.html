@@ -826,11 +826,7 @@ window.addEventListener('DOMContentLoaded', () => {
     if (novo === i) return;
     direcao = novo > i ? 1 : -1; i = novo; mostrar();
     if (modoPalestrante && !relogio.rodando && !relogio.acumulado && i > 0) alternarRelogio(true);
-    if (!remoto) {
-      // No app o servidor sincroniza também aparelhos em outros navegadores.
-      if (noApp) publicarSlide(i);
-      else avisar({ tipo: 'ir', i });
-    }
+    if (!remoto) avisar({ tipo: 'ir', i });
   }
   function revelar(todos) {
     const msgs = [...document.querySelectorAll('#quiz .msg')];
@@ -967,8 +963,8 @@ window.addEventListener('DOMContentLoaded', () => {
   }
   function receber(m) {
     if (!m || m.app !== 'inclusao-digital') return;
-    if (m.tipo === 'ola' && !noApp) avisar({ tipo: 'ir', i });
-    else if (m.tipo === 'ir' && !noApp) ir(m.i, true);
+    if (m.tipo === 'ola') avisar({ tipo: 'ir', i });
+    else if (m.tipo === 'ir') ir(m.i, true);
     else if (m.tipo === 'tecla') acao(m.k, m.shift, true);
   }
   window.addEventListener('message', (e) => {
@@ -1000,32 +996,6 @@ window.addEventListener('DOMContentLoaded', () => {
   const demos = SLIDES.map((s, k) => (s.demo ? k : -1)).filter((k) => k >= 0);
   let etapaApp = null, appAtivo = false, pedida = null, pedidaInicio = 0, pedidaEm = 0;
   let estadoApp = null, alterandoPainel = false;
-  let revisaoSlide = -1, publicandoSlide = false, slidePendente = null, registrada = false;
-
-  async function publicarSlide(indice) {
-    slidePendente = indice;
-    if (publicandoSlide || !registrada) return;
-    publicandoSlide = true;
-    try {
-      while (slidePendente !== null) {
-        const alvo = slidePendente; slidePendente = null;
-        const resposta = await fetch('/api/apresentacao', {method: 'POST',
-          headers: {'Content-Type': 'application/json'}, body: JSON.stringify({indice: alvo})});
-        if (!resposta.ok) throw new Error('Não foi possível sincronizar o slide.');
-        const e = await resposta.json(); revisaoSlide = e.revisao;
-      }
-    } catch (erro) { $('conexao-telao').textContent = erro.message; }
-    finally { publicandoSlide = false; }
-  }
-
-  async function registrarApresentacao() {
-    const resposta = await fetch('/api/apresentacao', {method: 'POST', headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({acao: 'registrar', slides: SLIDES.map((s, k) => ({titulo: tituloDe(s, k), etapa: s.demo ? demos.indexOf(k) : null}))})});
-    if (!resposta.ok) return;
-    const e = await resposta.json(); registrada = true; revisaoSlide = e.revisao;
-    ir(e.indice, true);
-    if (slidePendente !== null) publicarSlide(slidePendente);
-  }
 
   function atualizarControlesDemo() {
     const demo = !!SLIDES[i].demo;
@@ -1109,19 +1079,12 @@ window.addEventListener('DOMContentLoaded', () => {
   }
   async function consultarApp() {
     try {
-      if (!registrada) await registrarApresentacao();
-      const resposta = await fetch('/api/telao?apresentacao=1', { cache: 'no-store' });
+      const resposta = await fetch('/api/telao', { cache: 'no-store' });
       if (!resposta.ok) { estadoApp = null; atualizarControlesDemo(); return; }
       const e = await resposta.json();
       estadoApp = e;
       etapaApp = e.etapa; appAtivo = e.ativo;
       atualizarControlesDemo();
-      if (publicandoSlide || slidePendente !== null) return;
-      if (e.apresentacao && e.apresentacao.revisao !== revisaoSlide) {
-        revisaoSlide = e.apresentacao.revisao;
-        ir(e.apresentacao.indice, true);
-        return;
-      }
       if (pedida !== null) {
         // O app recusa pedidos enquanto termina outra ação: repete até ele confirmar a etapa.
         if (etapaApp === pedida || !appAtivo || Date.now() - pedidaInicio > 6000) pedida = null;
@@ -1136,11 +1099,7 @@ window.addEventListener('DOMContentLoaded', () => {
       atualizarControlesDemo();
     }
   }
-  if (noApp) {
-    // Uma consulta por vez evita respostas antigas após uma navegação rápida.
-    const acompanhar = async () => { await consultarApp(); setTimeout(acompanhar, 400); };
-    setTimeout(acompanhar, 0);
-  }
+  if (noApp) setInterval(consultarApp, 700);
   // Dentro da apresentação, o telão perde a própria barra: a da apresentação já tem os controles.
   $('telao-vivo').addEventListener('load', () => {
     try {

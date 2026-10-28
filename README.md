@@ -9,7 +9,6 @@
 | `app.py`, `controle.py` | Painel da equipe, controle da rede e das etapas |
 | `servidor.py` | Página de participação (`http://10.42.0.1:8080`) |
 | `comparacao.py` | Laboratório HTTP × HTTPS |
-| `remoto.py`, `interface/remoto.*` | Controle dos slides pelo celular, com pareamento e QR code local |
 | `interface/` | Painel (`index.html`, `app.js`, `estilo.css`), **telão** (`telao.html`, `telao.css`) e textos das etapas (`conteudo.js`) |
 | `docs/` | Contexto do projeto, roteiro de fala, guia de slides, `previa_telao.html` e `apresentacao_completa.html` |
 | `ver_telao.py` | Abre só a prévia do telão no navegador, sem rodar o app |
@@ -32,18 +31,6 @@ Na parte **Wi-Fi aberto**, abra **Exibir** na barra da apresentação e escolha 
 Com o app aberto, faça primeiro um envio em **Compare HTTP e HTTPS**. O botão do slide ficará disponível assim que houver resultados; confirme a exibição para projetar os bytes HTTP/HTTPS e as mensagens recebidas. Use o mesmo botão para ocultar. As duas visualizações são exclusivas e os detalhes ficam ocultos ao trocar a etapa da demonstração.
 
 Ao abrir `docs/apresentacao_completa.html` ou `docs/previa_telao.html` diretamente, os controles mostram exemplos identificados como fictícios. A apresentação e o painel ao vivo usam os registros da sessão, com confirmação antes de revelá-los.
-
-### Controlar os slides pelo celular
-
-1. Abra o app no notebook e clique em **Abrir apresentação no projetor**. Este recurso controla os 37 slides servidos pelo app; o arquivo HTML aberto com duplo clique funciona de forma independente.
-2. Conecte o celular à **mesma rede do notebook**. Na demonstração real, inicie primeiro a rede da atividade e conecte o celular a ela. Funciona sem internet.
-3. No painel da equipe, em **Controle pelo celular**, clique em **Ativar controle do celular**. Leia o QR code com a câmera ou abra o endereço exibido. Digite no celular o **código de seis dígitos**, mostrado somente no painel da equipe.
-4. Use **Anterior** e **Próximo** para passar os slides. Notebook, projetor e celular acompanham a posição atual. Nas sete etapas de Wi-Fi aberto também aparecem **Mostrar MAC e mensagens** e **Mostrar HTTP × HTTPS**. A comparação fica disponível após um envio pelo notebook; a exibição dos dados exige confirmação no celular.
-5. **Gerar novo código** desconecta o controle anterior. **Desativar controle** fecha o acesso pelo celular. O código é de uso único e a sessão dura até duas horas. Fechar a página do notebook não encerra o app; mantenha a apresentação aberta para os comandos funcionarem.
-
-Se não abrir, confira o Wi-Fi, mantenha a conexão mesmo com o aviso “sem internet” e permita conexões de entrada do Python no firewall do notebook (normalmente porta **8766**, ou a indicada no endereço). Redes com isolamento entre clientes podem impedir o acesso. Depois de trocar a rede do notebook, desative e ative o controle novamente para gerar o endereço correto.
-
-O controle usa HTTP local e permite somente navegação e exibição dos painéis; não libera o painel administrativo nem mostra os registros no celular. O código evita acesso casual, mas não criptografa a conexão em uma rede aberta. O QR code é gerado no próprio notebook, sem serviços externos. A biblioteca incluída em `vendor/qrcodegen.py` é do [Project Nayuki](https://github.com/nayuki/QR-Code-generator), sob licença MIT preservada no arquivo.
 
 ## Ver só o telão (sem rodar o app)
 

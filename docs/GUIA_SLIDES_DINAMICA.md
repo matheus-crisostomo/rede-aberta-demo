@@ -8,10 +8,6 @@ Este roteiro foi pensado para uma atividade presencial de aproximadamente **10 a
 
 Mostrar quais informações aparecem na comunicação entre um celular, a rede Wi-Fi e uma página local. Ao final, o público deverá distinguir informações observáveis na conexão de dados gravados após participação voluntária.
 
-## Operação pelo celular
-
-Com a apresentação aberta pelo app, ative **Controle pelo celular** no painel da equipe. Conecte seu celular à mesma rede, abra o QR code e informe o código privado do painel. Os botões **Anterior/Próximo** passam os 37 slides; nas sete etapas finais, **MAC e mensagens** e **HTTP × HTTPS** alternam os painéis após confirmação. Prepare e faça um envio da comparação no notebook antes de mostrá-la. O QR code do controle é exclusivo da equipe e deve ficar fora dos slides do público. Veja o [passo a passo](../README.md#controlar-os-slides-pelo-celular).
-
 ## Direção visual
 
 - Monte em formato 16:9, no Canva, PowerPoint ou Google Slides.

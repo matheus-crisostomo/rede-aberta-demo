@@ -9,3 +9,6 @@
 .apresentacao-equipe{background:#fff;border:1px solid var(--linha);border-radius:18px;padding:18px 20px 20px}
 .apresentacao-equipe .titulo-secao{margin-bottom:12px}
 .apresentacao-equipe iframe{display:block;width:100%;height:clamp(520px,72vh,820px);border:0;border-radius:12px;background:#14254d}
+/* A orientação do palestrante deve quebrar linha também em telas estreitas. */
+.apresentacao-equipe .titulo-secao{align-items:flex-start;flex-wrap:wrap}
+.apresentacao-equipe .titulo-secao>span{white-space:normal;max-width:100%;line-height:1.5}

@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Controle dos slides — Rede aberta</title><link rel="stylesheet" href="/remoto.css"><script src="/remoto.js" defer></script></head>
+<body><main>
+  <header><span class="marca">REDE ABERTA</span><h1>Seu controle dos slides</h1><p id="conexao" role="status">Conectando ao notebook…</p></header>
+  <form id="pareamento" hidden><label for="codigo">Código mostrado no painel do notebook</label><input id="codigo" name="codigo" type="text" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="one-time-code" required placeholder="000000"><button class="primario" type="submit">Conectar controle</button><p>Use a mesma rede do notebook. Não precisa de internet.</p></form>
+  <section id="controle" hidden aria-label="Controle da apresentação">
+    <article class="slide"><p id="numero">Slide —</p><h2 id="titulo">Aguardando apresentação</h2></article>
+    <nav aria-label="Passar slides"><button id="voltar">← Anterior</button><button id="avancar" class="primario">Próximo →</button></nav>
+    <section id="paineis" hidden><h2>Mostrar na apresentação</h2><p>Confirme antes de revelar dados para o público.</p><button id="dados" aria-pressed="false">Mostrar MAC e mensagens</button><button id="comparacao" aria-pressed="false">Mostrar HTTP × HTTPS</button><p id="dica-comparacao">Prepare a comparação e faça um envio pelo notebook.</p></section>
+    <p class="ajuda">Mantenha a apresentação aberta no notebook. Os botões acompanham o slide atual.</p>
+  </section>
+  <p id="erro" role="alert" hidden></p>
+</main>
+<dialog id="confirmacao"><form method="dialog"><h2>Mostrar dados na apresentação?</h2><p id="confirmacao-texto"></p><div><button value="cancelar">Cancelar</button><button value="confirmar" class="primario">Mostrar no slide</button></div></form></dialog>
+</body></html>

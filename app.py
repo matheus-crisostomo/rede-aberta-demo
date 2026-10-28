@@ -17,6 +17,7 @@ from pathlib import Path
 from urllib.parse import urlsplit
 
 from controle import Controle, ErroOperacao
+from remoto import Apresentacao, ErroRemoto
 
 
 BASE = Path(__file__).resolve().parent
@@ -36,11 +37,16 @@ class ServidorApp(ThreadingHTTPServer):
     daemon_threads = True
 
     def __init__(self, endereco, controle):
+        self.apresentacao = Apresentacao(controle)
         super().__init__(endereco, HandlerApp)
         self.controle = controle
         self.token = secrets.token_urlsafe(32)
         self.porta = self.server_address[1]
         self.origem = f"http://127.0.0.1:{self.porta}"
+
+    def server_close(self):
+        self.apresentacao.desativar()
+        super().server_close()
 
 
 class HandlerApp(BaseHTTPRequestHandler):
@@ -89,7 +95,13 @@ class HandlerApp(BaseHTTPRequestHandler):
                 self.enviar(401, {"erro": "Abra o aplicativo pelo atalho para iniciar sua sessão."})
                 return
             if path in ("/api/estado", "/api/telao"):
-                self.enviar(200, self.server.controle.estado(publico=path.endswith("telao")))
+                dados = self.server.controle.estado(publico=path.endswith("telao"))
+                dados["apresentacao"] = self.server.apresentacao.estado(presenca="apresentacao=1" in urlsplit(self.path).query)
+                if path == "/api/estado":
+                    dados["remoto"] = self.server.apresentacao.privado()
+                self.enviar(200, dados)
+            elif path == "/api/remoto/qr":
+                self.enviar(200, self.server.apresentacao.qr, "image/svg+xml")
             else:
                 self.enviar(404, {"erro": "Recurso não encontrado."})
             return
@@ -137,6 +149,27 @@ class HandlerApp(BaseHTTPRequestHandler):
             return
         if not self.autenticado():
             self.enviar(401, {"erro": "Sessão encerrada. Reabra o aplicativo pelo atalho."})
+            return
+        if path in ("/api/apresentacao", "/api/remoto"):
+            try:
+                apresentacao = self.server.apresentacao
+                if path == "/api/apresentacao":
+                    resultado = (apresentacao.registrar(dados) if dados.get("acao") == "registrar"
+                                 else apresentacao.mudar(dados.get("indice")))
+                else:
+                    acao = dados.get("acao")
+                    if acao == "ativar":
+                        apresentacao.ativar()
+                    elif acao == "desativar":
+                        apresentacao.desativar()
+                    elif acao == "renovar":
+                        apresentacao.renovar()
+                    else:
+                        raise ErroRemoto("Ação inválida.")
+                    resultado = apresentacao.privado()
+                self.enviar(200, resultado)
+            except (ErroRemoto, OSError) as erro:
+                self.enviar(409, {"erro": str(erro)})
             return
         if path != "/api/acao":
             self.enviar(404, {"erro": "Recurso não encontrado."})
@@ -195,6 +228,7 @@ def main():
                     pass
                 proxima_consulta = time.monotonic() + 5
     finally:
+        servidor.apresentacao.desativar()
         with controle.lock:
             controle.fechando = True
         if controle.worker:

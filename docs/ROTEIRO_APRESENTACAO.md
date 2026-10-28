@@ -16,6 +16,14 @@ Uma pessoa pode conduzir a fala e outra operar o painel e ajudar nas conexões. 
 
 Os envios de teste podem permanecer nos totais dessa sessão. Apresente os números como quantidade de envios, incluindo a preparação, e não como quantidade de participantes. Prepare também capturas com dados fictícios para usar se algum equipamento falhar.
 
+## Apresentar usando o celular como controle
+
+Depois de preparar a rede, conecte o seu celular a ela. No painel do notebook, clique em **Ativar controle do celular**, leia o QR code e digite o código mostrado na área **Controle pelo celular**. Mantenha essa área apenas na tela da equipe; projete a janela da apresentação.
+
+Use **Anterior** e **Próximo** no celular durante toda a palestra. Na dinâmica final aparecem os botões **MAC e mensagens** e **HTTP × HTTPS**: confirme antes de revelar os detalhes ao público. A comparação precisa ter ao menos um envio feito pelo painel do notebook. Trocar o slide esconde os dados novamente.
+
+Mantenha a apresentação aberta no notebook e teste o avanço no projetor antes de começar. O controle funciona sem internet, na mesma rede. Se mudar de rede, desative e ative o controle novamente. Ao terminar, clique em **Desativar controle**; para trocar de celular, use **Gerar novo código**. Veja também as [instruções de conexão](../README.md#controlar-os-slides-pelo-celular).
+
 ## Sequência durante a apresentação
 
 | Tempo aproximado | Etapa do app | Sua ação principal |

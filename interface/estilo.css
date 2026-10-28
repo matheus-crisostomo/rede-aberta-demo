@@ -12,3 +12,5 @@
 /* A orientação do palestrante deve quebrar linha também em telas estreitas. */
 .apresentacao-equipe .titulo-secao{align-items:flex-start;flex-wrap:wrap}
 .apresentacao-equipe .titulo-secao>span{white-space:normal;max-width:100%;line-height:1.5}
+/* Pareamento privado: esta área aparece somente no painel da equipe. */
+.remoto-equipe{margin:20px auto;padding:20px 24px;max-width:1540px;display:flex;align-items:center;justify-content:space-between;gap:24px;background:#fff;border:1px solid #d7e2ee;border-radius:16px}.remoto-equipe h2{margin:0 0 8px}.remoto-equipe p{margin:10px 0;overflow-wrap:anywhere}.remoto-equipe img{flex:none;background:white;max-width:100%;height:auto}.remoto-equipe strong{font-size:26px;letter-spacing:.12em}.remoto-equipe .ajuda{max-width:750px}@media(max-width:640px){.remoto-equipe{margin:12px;flex-direction:column;align-items:stretch;padding:18px}.remoto-equipe img{align-self:center}.remoto-equipe .botoes-comparacao{flex-wrap:wrap}}

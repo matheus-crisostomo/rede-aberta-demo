@@ -21,6 +21,7 @@ async function confirmar(titulo, texto) {
   const dialogo = $('confirmacao');
   $('confirmacao-titulo').textContent = titulo;
   $('confirmacao-texto').textContent = texto;
+  dialogo.returnValue = '';
   return new Promise((resolve) => {
     dialogo.addEventListener('close', () => resolve(dialogo.returnValue === 'confirmar'), {once: true});
     dialogo.showModal();
@@ -99,6 +100,7 @@ function atualizarBotoes() {
 
 function renderizarEquipe() {
   const e = estado;
+  renderizarRemoto();
   $('badge').textContent = e.modo === 'ensaio' ? 'Ensaio' : 'Demonstração real';
   $('badge').classList.toggle('real', e.modo === 'real');
   $('mensagem').textContent = e.ocupado ? 'Operação em andamento. Se aparecer uma janela do sistema, autorize para continuar.' : e.mensagem;
@@ -145,6 +147,32 @@ function renderizarEquipe() {
   }
   renderizarComparacao();
   atualizarBotoes();
+}
+
+let remotoPendente = false, remotoErro = '';
+function renderizarRemoto() {
+  const r = estado?.remoto;
+  if (!r) return;
+  $('remoto-ativar').hidden = r.ativo;
+  $('remoto-renovar').hidden = $('remoto-desativar').hidden = !r.ativo;
+  $('remoto-acesso').hidden = $('remoto-qr').hidden = !r.ativo;
+  ['ativar', 'renovar', 'desativar'].forEach(a => { $(`remoto-${a}`).disabled = remotoPendente; });
+  $('remoto-status').textContent = remotoPendente ? 'Aguarde…' : remotoErro || (!r.ativo ? 'Desativado' : r.conectado ? 'Celular conectado' : r.pareado ? 'Celular pareado — aguardando conexão' : 'Aguardando o celular');
+  $('remoto-url').href = r.url || '#'; $('remoto-url').textContent = r.url;
+  $('remoto-codigo').textContent = r.codigo || (r.pareado ? 'Já utilizado' : 'Expirado — gere novo código');
+  if (r.ativo && $('remoto-qr').dataset.url !== r.url) {
+    $('remoto-qr').src = `/api/remoto/qr?v=${Date.now()}`;
+    $('remoto-qr').dataset.url = r.url;
+  }
+  if (!r.ativo) { $('remoto-qr').removeAttribute('src'); delete $('remoto-qr').dataset.url; }
+}
+
+async function alterarRemoto(acao) {
+  if (remotoPendente) return;
+  remotoPendente = true; remotoErro = ''; renderizarRemoto();
+  try { await requisitar('/api/remoto', {acao}); await consultar(); }
+  catch (erro) { remotoErro = erro.message; }
+  finally { remotoPendente = false; renderizarRemoto(); }
 }
 
 function ajustarPalco() {
@@ -288,6 +316,7 @@ async function iniciarInterface() {
       botao.title = etapa.titulo; botao.setAttribute('aria-label', `Etapa ${i + 1}: ${etapa.titulo}`);
       botao.onclick = () => acao('etapa', {etapa: i}); $('etapas').append(botao);
     });
+    ['ativar', 'renovar', 'desativar'].forEach(a => { $(`remoto-${a}`).onclick = () => alterarRemoto(a); });
     $('modo').onchange = () => { selecionouModo = true; $('simulacao').hidden = $('modo').value !== 'ensaio'; atualizarBotoes(); };
     $('interface').onchange = () => { selecionouInterface = true; };
     document.querySelectorAll('[data-acao]').forEach((botao) => {

@@ -41,6 +41,10 @@ const base = require('path').resolve(__dirname, '..');
   const apresentador = page.frames().find(frame => frame.name() === 'palestrante-inclusao');
   assert.ok(apresentador, 'O painel deve incluir o modo palestrante.');
   await apresentador.waitForFunction(() => document.documentElement.classList.contains('palestrante'));
+  // A posição agora pertence ao servidor e sobrevive ao recarregamento das janelas.
+  await page.evaluate(() => fetch('/api/apresentacao', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({indice:0})}));
+  await projetor.waitForFunction(() => location.hash === '#1');
+  await apresentador.waitForFunction(() => location.hash === '#1');
   await projetor.keyboard.press('ArrowRight');
   await apresentador.waitForFunction(() => location.hash === '#2');
   await page.keyboard.press('Home');
